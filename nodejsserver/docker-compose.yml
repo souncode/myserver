@@ -1,0 +1,13 @@
+version: "3"
+services:
+  web:
+    image: soun-node-app
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /media/soun/EHDD/godeystorage:/app/uploads
+    command: node server.js
+    restart: always

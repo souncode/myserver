@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const db = require('../config/db');
+const ProjModel = require('./project.model')
 
 const { Schema } = mongoose;
 
@@ -14,6 +15,11 @@ const boundingBoxSchema = new Schema({
 });
 
 const imageDataSchema = new Schema({
+    proj: {
+            type: Schema.Types.ObjectId,
+            ref: ProjModel.modelName
+        },
+        
     name: { type: String, required: true },
     folder: { type: String, required: true },
     url: { type: String, required: true },

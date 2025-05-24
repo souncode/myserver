@@ -34,13 +34,12 @@ router.post('/uploads', upload.array('images'), async (req, res) => {
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({ message: 'No files uploaded' });
   }
-
+//thumb
+ const project = req.query.project
   const folder = req.query.folder || 'default';
   const protocol = req.protocol;
   const host = req.headers.host;
   const thumbDir = path.join(BASE_UPLOAD_DIR, folder, THUMBNAIL_DIR_NAME);
-
-  // Tạo thư mục thumbnail nếu chưa có
   if (!fs.existsSync(thumbDir)) {
     fs.mkdirSync(thumbDir, { recursive: true });
   }
@@ -56,8 +55,8 @@ router.post('/uploads', upload.array('images'), async (req, res) => {
       await sharp(file.path)
         .resize({ width: 300 }) // Resize width 300px (hoặc theo nhu cầu)
         .toFile(thumbPath);
-
       const imageData = new ImageDataModel({
+        proj:project,
         name: file.originalname,
         folder,
         url: fullImageUrl,
@@ -65,7 +64,7 @@ router.post('/uploads', upload.array('images'), async (req, res) => {
         size: file.size,
         boundingBoxes: []
       });
-
+console.error('Projectname:', project);
       return await imageData.save();
     }));
 
@@ -87,6 +86,7 @@ router.get('/uploads/list', async (req, res) => {
     const images = await ImageDataModel.find({ folder }).sort({ createdAt: -1 });
 
     res.json(images.map(image => ({
+       proj:image.project,
       id: image._id,
       name: image.name,
       url: image.url,

@@ -8,6 +8,6 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-      - /media/soun/EHDD/godeystorage:/app/uploads
+      - /media/soun/EHDD1/godeystorage:/app/uploads
     command: node server.js
     restart: always

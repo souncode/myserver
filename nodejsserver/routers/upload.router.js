@@ -34,8 +34,8 @@ router.post('/uploads', upload.array('images'), async (req, res) => {
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({ message: 'No files uploaded' });
   }
-//thumb
- const project = req.query.project
+  //thumb
+  const project = req.query.project
   const folder = req.query.folder || 'default';
   const protocol = req.protocol;
   const host = req.headers.host;
@@ -56,7 +56,7 @@ router.post('/uploads', upload.array('images'), async (req, res) => {
         .resize({ width: 300 }) // Resize width 300px (hoặc theo nhu cầu)
         .toFile(thumbPath);
       const imageData = new ImageDataModel({
-        proj:project,
+        proj: project,
         name: file.originalname,
         folder,
         url: fullImageUrl,
@@ -64,7 +64,7 @@ router.post('/uploads', upload.array('images'), async (req, res) => {
         size: file.size,
         boundingBoxes: []
       });
-console.error('Projectname:', project);
+      console.error('Projectname:', project);
       return await imageData.save();
     }));
 
@@ -86,7 +86,7 @@ router.get('/uploads/list', async (req, res) => {
     const images = await ImageDataModel.find({ folder }).sort({ createdAt: -1 });
 
     res.json(images.map(image => ({
-       proj:image.project,
+      proj: image.oject,
       id: image._id,
       name: image.name,
       url: image.url,
@@ -148,7 +148,7 @@ router.delete('/uploads', async (req, res) => {
   try {
     // Đường dẫn ảnh
     const imagePath = path.join(BASE_UPLOAD_DIR, folder, 'images', filename);
-     const thumbPath = path.join(BASE_UPLOAD_DIR, folder, 'thumbnails', 'thumb_'+filename);
+    const thumbPath = path.join(BASE_UPLOAD_DIR, folder, 'thumbnails', 'thumb_' + filename);
 
     // Xoá ảnh nếu tồn tại
     if (fs.existsSync(imagePath)) {
@@ -157,7 +157,7 @@ router.delete('/uploads', async (req, res) => {
     } else {
       console.warn(`⚠️ Image not found: ${imagePath}`);
     }
-     if (fs.existsSync(thumbPath)) {
+    if (fs.existsSync(thumbPath)) {
       fs.unlinkSync(thumbPath);
       console.log(`🗑️ Deleted image: ${thumbPath}`);
     } else {
